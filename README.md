@@ -94,6 +94,29 @@ time, setpoint, measurement, control
 
 ---
 
+## Design Decisions
+
+### 1. Discrete-Time Implementation
+
+The controller is implemented in discrete time using a fixed sampling interval (dt).  
+This mirrors real embedded control systems where software executes periodically in a time-triggered loop.
+
+### 2. Integral Anti-Windup
+
+Integral clamping is used to prevent windup when actuator saturation occurs.  
+This reflects practical control constraints in real-world systems.
+
+### 3. Output Saturation
+
+Actuator limits are modeled explicitly to simulate physical system constraints.
+
+### 4. Separation of Concerns
+
+Controller, plant, and orchestration logic are separated into independent modules.  
+This improves the system's maintainability, testability, and extensibility.
+
+---
+
 ## Why This Project
 
 This project demonstrates:
