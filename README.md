@@ -36,6 +36,31 @@ The system is divided into three main components:
 
 ---
 
+## MBSE-style View (System Decomposition)
+
+The simulation is structured as three collaborating blocks, similar to a SysML-style decomposition:
+
+```mermaid
+flowchart LR
+    R[Setpoint r] --> CL[ControlLoop]
+    CL -->|compute| PID[PIDController]
+    PID -->|u| PL[FirstOrderPlant]
+    PL -->|y| CL
+    CL --> CSV[simulation.csv]
+```
+
+### Interfaces
+
+- PIDController: input → (r, y), output → u
+
+- FirstOrderPlant: input → u, output → y
+
+- ControlLoop: orchestrates sampling, state updates, and logging
+
+> This separation enforces clear responsibility boundaries and allows each component to be tested and extended independently.
+
+---
+
 ## Features
 
 - Object-oriented design with clear separation of concerns
@@ -66,6 +91,8 @@ With columns:
 ```
 time, setpoint, measurement, control
 ```
+
+---
 
 ## Why This Project
 
