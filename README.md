@@ -95,6 +95,27 @@ The figure above compares closed-loop behavior with and without integral anti-wi
 
 ---
 
+## Disturbance Recovery Metrics
+
+To quantify the effect of anti-windup, disturbance recovery performance was evaluated from the logged simulation data.
+
+Disturbance injected at t = 3.5s.
+
+| Configuration       | Pre-level | Drop   | Recovery Time (±2%) |
+| ------------------- | --------- | ------ | ------------------- |
+| Anti-windup enabled | 0.8463    | 0.1857 | 0.81 s              |
+| No anti-windup      | 0.8463    | 0.1857 | n/a                 |
+
+### Interpretation
+
+- Both configurations experience the same disturbance magnitude. However, with anti-windup enabled, the controller returns to the pre-disturbance operating level within ~0.8 seconds.
+
+- Without anti-windup, the integral term continues accumulating during actuator saturation, preventing recovery within the defined tolerance band.
+
+> This highlights the importance of integral windup mitigation in embedded control systems with actuator limits.
+
+---
+
 ## Features
 
 - Object-oriented design with clear separation of concerns
