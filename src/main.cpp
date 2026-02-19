@@ -3,18 +3,9 @@
 #include "ControlLoop.h"
 #include <iostream>
 
-int main() {
+int main()
+{
     const double dt = 0.01; // 10 ms sampling time
-
-    // Plant: dy/dt = -a*y + b*u
-    FirstOrderPlant plant(/*a=*/1.2, /*b=*/1.0, dt, /*y0=*/0.0);
-
-    // PID gains (simple starting values)
-    PIDController pid(/*kp=*/2.0, /*ki=*/1.0, /*kd=*/0.05, dt);
-
-    // Simulate actuator saturation + anti-windup
-    pid.setOutputLimits(PIDController::Limits{-2.0, 2.0});
-    pid.setIntegralLimits(PIDController::Limits{-1.0, 1.0});
 
     SimulationConfig cfg;
     cfg.dt_seconds = dt;
@@ -26,13 +17,30 @@ int main() {
     cfg.disturbance_time = 3.5;
     cfg.disturbance_offset = -0.2;
 
-    ControlLoop loop(pid, plant, cfg);
+    // ---------- Run 1: Baseline (saturation + anti-windup) ----------
+    {
+        FirstOrderPlant plant(1.2, 1.0, dt, 0.0);
+        PIDController pid(2.0, 1.0, 0.05, dt);
 
-    const std::string csv_path = "simulation.csv";
-    loop.runToCsv(csv_path);
+        pid.setOutputLimits(PIDController::Limits{-2.0, 2.0});
+        pid.setIntegralLimits(PIDController::Limits{-1.0, 1.0}); // anti-windup
 
-    std::cout << "Simulation finished. Output written to: " << csv_path << "\n";
+        ControlLoop loop(pid, plant, cfg);
+        loop.runToCsv("simulation_baseline.csv");
+    }
+
+    // ---------- Run 2: No anti-windup (saturation only) ----------
+    {
+        FirstOrderPlant plant(1.2, 1.0, dt, 0.0);
+        PIDController pid(2.0, 1.0, 0.05, dt);
+
+        pid.setOutputLimits(PIDController::Limits{-2.0, 2.0});
+        pid.setIntegralLimits(std::nullopt); // disable integral clamping
+
+        ControlLoop loop(pid, plant, cfg);
+        loop.runToCsv("simulation_no_antiwindup.csv");
+    }
+
+    std::cout << "Wrote simulation_baseline.csv and simulation_no_antiwindup.csv\n";
     return 0;
 }
-
-

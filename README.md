@@ -67,6 +67,34 @@ flowchart LR
 
 ---
 
+## Comparison: Anti-Windup vs None
+
+![Anti-windup comparison](docs/response_comparison.png)
+
+The figure above compares closed-loop behavior with and without integral anti-windup under actuator saturation.
+
+### Experiment Setup
+
+- Actuator saturation limits: [-2.0, 2.0]
+- Step setpoint applied at t = 1s
+- Disturbance injected at t = 3.5s
+- Identical PID gains in both cases
+
+### Observations
+
+- Both controllers track the step input and respond to the disturbance.
+- Without anti-windup, the integral term continues accumulating error while the actuator is saturated.
+- With anti-windup enabled, integral growth is constrained, leading to more controlled and predictable recovery behavior.
+- Anti-windup improves robustness when actuator limits are active.
+
+### Engineering Insight
+
+- In embedded control systems, actuators are physically limited.
+- When saturation occurs, the integral term may accumulate excessively (integrator windup), causing degraded transient performance or instability.
+- Explicit integral clamping mitigates this effect and is a common design consideration in real-world mechatronic systems.
+
+---
+
 ## Features
 
 - Object-oriented design with clear separation of concerns
