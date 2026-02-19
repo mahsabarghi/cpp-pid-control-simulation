@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(cpp_pid_control_simulation
     src/main.cpp
     src/PIDController.cpp
+    src/FirstOrderPlant.cpp
 )
 
 target_include_directories(cpp_pid_control_simulation PRIVATE src)
