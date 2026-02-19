@@ -1,10 +1,13 @@
 #pragma once
 
+#include <algorithm>
 #include <optional>
 
-class PIDController {
+class PIDController
+{
 public:
-    struct Limits {
+    struct Limits
+    {
         double min;
         double max;
     };
@@ -32,5 +35,9 @@ private:
 
     std::optional<Limits> output_limits_;
     std::optional<Limits> integral_limits_;
-};
 
+    static double clamp(double v, const Limits &lim)
+    {
+        return std::max(lim.min, std::min(v, lim.max));
+    }
+};

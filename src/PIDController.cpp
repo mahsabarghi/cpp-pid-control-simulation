@@ -41,8 +41,26 @@ void PIDController::reset(double integral, double previous_error) {
     previous_error_ = previous_error;
 }
 
-// Placeholder for now — we’ll implement the actual PID math next step.
-double PIDController::compute(double /*setpoint*/, double /*measurement*/) {
-    return 0.0;
+double PIDController::compute(double setpoint, double measurement) {
+    const double error = setpoint - measurement;
+
+    // Integral term
+    integral_ += error * dt_;
+    if (integral_limits_) {
+        integral_ = clamp(integral_, *integral_limits_);
+    }
+
+    // Derivative term
+    const double derivative = (error - previous_error_) / dt_;
+    previous_error_ = error;
+
+    double u = kp_ * error + ki_ * integral_ + kd_ * derivative;
+
+    // Output saturation (actuator limits)
+    if (output_limits_) {
+        u = clamp(u, *output_limits_);
+    }
+
+    return u;
 }
 
