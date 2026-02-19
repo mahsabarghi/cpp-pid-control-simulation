@@ -1,5 +1,7 @@
 # C++ PID Control System Simulation
 
+> A modular C++ closed-loop control simulation demonstrating embedded-oriented software design and disturbance recovery analysis.
+
 This project demonstrates an object-oriented implementation of a discrete-time PID controller in C++, applied to a closed-loop simulation of a dynamic system.
 
 The goal is to model and simulate control behavior in a structured and modular software architecture, similar to control-oriented software used in mechatronic systems.
@@ -38,7 +40,7 @@ The system is divided into three main components:
 
 ## MBSE-style View (System Decomposition)
 
-The simulation is structured as three collaborating blocks, similar to a SysML-style decomposition:
+The system is decomposed into modular blocks with clearly defined interfaces, following model-based system engineering principles.
 
 ```mermaid
 flowchart LR
@@ -84,8 +86,7 @@ The figure above compares closed-loop behavior with and without integral anti-wi
 
 - Both controllers track the step input and respond to the disturbance.
 - Without anti-windup, the integral term continues accumulating error while the actuator is saturated.
-- With anti-windup enabled, integral growth is constrained, leading to more controlled and predictable recovery behavior.
-- Anti-windup improves robustness when actuator limits are active.
+- With anti-windup enabled, integral accumulation is constrained, improving post-disturbance recovery behavior.
 
 ### Engineering Insight
 
@@ -138,7 +139,8 @@ cmake --build build -j
 **This generates:**
 
 ```
-simulation.csv
+- simulation.csv
+- simulation_no_antiwindup.csv
 ```
 
 With columns:
@@ -147,18 +149,30 @@ With columns:
 time, setpoint, measurement, control
 ```
 
+**To generate comparison plots:**
+
+```
+python3 visualization.py
+```
+
+**To compute disturbance recovery metrics:**
+
+```
+python3 metrics.py
+```
+
 ---
 
 ## Design Decisions
 
 ### 1. Discrete-Time Implementation
 
-The controller is implemented in discrete time using a fixed sampling interval (dt).  
+The controller is implemented in discrete time using a fixed sampling interval (dt).
 This mirrors real embedded control systems where software executes periodically in a time-triggered loop.
 
 ### 2. Integral Anti-Windup
 
-Integral clamping is used to prevent windup when actuator saturation occurs.  
+Integral clamping is used to prevent windup when actuator saturation occurs.
 This reflects practical control constraints in real-world systems.
 
 ### 3. Output Saturation
@@ -167,7 +181,7 @@ Actuator limits are modeled explicitly to simulate physical system constraints.
 
 ### 4. Separation of Concerns
 
-Controller, plant, and orchestration logic are separated into independent modules.  
+Controller, plant, and orchestration logic are separated into independent modules.
 This improves the system's maintainability, testability, and extensibility.
 
 ---
@@ -176,7 +190,7 @@ This improves the system's maintainability, testability, and extensibility.
 
 This project demonstrates:
 
-- C++ object-oriented design
+- C++ object-oriented design and encapsulation
 
 - Control systems fundamentals (PID, feedback loops)
 
@@ -187,3 +201,13 @@ This project demonstrates:
 - Engineering-oriented software structure
 
 > It reflects control-oriented development in multidisciplinary mechatronic environments.
+
+---
+
+## Future Improvements
+
+- Back-calculation anti-windup implementation
+- Higher-order or nonlinear plant models
+- Real-time task scheduling abstraction
+- Unit testing of controller behavior
+- Hardware-in-the-loop integration
