@@ -8,6 +8,7 @@ add_executable(cpp_pid_control_simulation
     src/main.cpp
     src/PIDController.cpp
     src/FirstOrderPlant.cpp
+    src/ControlLoop.cpp
 )
 
 target_include_directories(cpp_pid_control_simulation PRIVATE src)
