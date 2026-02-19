@@ -61,6 +61,12 @@ flowchart LR
 
 ---
 
+## Example Closed-Loop Response
+
+![Closed-loop response](docs/response.png)
+
+---
+
 ## Features
 
 - Object-oriented design with clear separation of concerns
